@@ -37,3 +37,6 @@ The API is Android compatible.
 ## Discussion group
 
 - [Discussion group](https://groups.google.com/forum/?fromgroups#!forum/musicg-api): Discuss musicg here.
+
+
+Wercker [build URL](https://app.wercker.com/#Alianza/musicg/build/5888f9bb3ecd06010039d16d)
