@@ -10,7 +10,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.alianza</groupId>
+            <groupId>com.alianza.qa</groupId>
             <artifactId>musicg</artifactId>
             <version>${project.version}</version>
         </dependency>
