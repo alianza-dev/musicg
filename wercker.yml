@@ -1,42 +1,26 @@
+---
 box:
-  id: $DOCKER_REPO/alz-java-build
+  id: $DOCKER_REPO/alpine-maven
   username: $DOCKER_REPO_USERNAME
   password: $DOCKER_REPO_PASSWORD
   tag: latest
   registry: $DOCKER_REGISTRY
 
+prepare:
+  steps:
 
 build:
   steps:
-    - alianza/template-version-notifier:
-        template_version: 1.0.0
-        template_url: $TEMPLATE_URL
-        template_auth: $TEMPLATE_AUTH
-        slack_url: $SLACK_URL
-        slack_channel: $SLACK_CHANNEL
-
-    - add-ssh-key:
-        keyname: GITHUB_KEY
-
-    - script:
-        name: Create new git tag
-        code: |
-            /usr/bin/get_component_version
-
     - alianza/maven:
         name: Compile and Test
         goals: -Dmaven.test.failure.ignore=false test
-        skip_on_branch: master hotfix/* release/*
 
+release:
+  steps:
+    - script:
+        name: Fetch git tags before release
+        code: |
+          git checkout $WERCKER_GIT_BRANCH
     - alianza/maven:
         name: Compile, test and deploy artifacts to artifactory
-        goals: -Dmaven.test.failure.ignore=false -DdeployAtEnd deploy
-        only_on_branch: master hotfix/* release/*
-
-  after-steps:
-    - alianza/slack-notifier:
-        url: $SLACK_URL
-        channel: $SLACK_CHANNEL
-        username: wercker
-        icon_emoji: ':werker:'
-        notify_on: failed
+        goals: -Dmaven.test.failure.ignore=false clean test release:prepare release:perform -DscmCommentPrefix='[skip ci]' -DtagNameFormat='v@{project.version}' -DdeployAtEnd=true
