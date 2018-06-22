@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 
 import com.musicg.fingerprint.FingerprintManager;
 import com.musicg.fingerprint.FingerprintSimilarity;
@@ -143,6 +144,34 @@ public class Wave implements Serializable{
 		else{
 			System.err.println("Trim error: Negative length");
 		}
+	}
+
+	public Wave trimmed(double secondsFromLeft, double secondsFromRight) {
+		int sampleRate = waveHeader.getSampleRate();
+		int bitsPerSample = waveHeader.getBitsPerSample();
+		int channels = waveHeader.getChannels();
+
+		int leftTrimNumberOfSample = (int) (sampleRate * bitsPerSample / 8
+				* channels * secondsFromLeft);
+		int rightTrimNumberOfSample = (int) (sampleRate * bitsPerSample / 8
+				* channels * secondsFromRight);
+
+		// Samples number must be divisible by (bitsPerSample / 8)
+		int residualLeft = leftTrimNumberOfSample % (bitsPerSample / 8);
+		if (residualLeft != 0)
+			leftTrimNumberOfSample -= residualLeft;
+
+		int residualRight = rightTrimNumberOfSample % (bitsPerSample / 8);
+		if (residualRight != 0)
+			rightTrimNumberOfSample -= residualRight;
+
+		return trimmed(leftTrimNumberOfSample, rightTrimNumberOfSample);
+	}
+
+	public Wave trimmed(int samplesToTrimFromLeft, int samplesToTrimFromRight) {
+		Wave clone = clone();
+		clone.trim(samplesToTrimFromLeft, samplesToTrimFromRight);
+		return clone;
 	}
 
 	/**
@@ -343,5 +372,9 @@ public class Wave implements Serializable{
 	public FingerprintSimilarity getFingerprintSimilarity(Wave wave){		
 		FingerprintSimilarityComputer fingerprintSimilarityComputer=new FingerprintSimilarityComputer(this.getFingerprint(),wave.getFingerprint());
 		return fingerprintSimilarityComputer.getFingerprintsSimilarity();
+	}
+
+	public Wave clone() {
+		return new Wave(waveHeader.clone(), Arrays.copyOf(data, data.length));
 	}
 }
