@@ -100,7 +100,7 @@ public class FingerprintSimilarity {
 	 * 
 	 * @return most similar starting time
 	 */
-	public float getsetMostSimilarTimePosition(){
-		return (float)mostSimilarFramePosition/fingerprintProperties.getNumRobustPointsPerFrame()/fingerprintProperties.getFps();
+	public float getMostSimilarTimePosition(){
+		return (float)mostSimilarFramePosition/fingerprintProperties.getNumRobustPointsPerFrame()/fingerprintProperties.getNumFramesInOneSecond();
 	}
 }
