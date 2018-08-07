@@ -66,6 +66,25 @@ public class WaveHeader {
 		valid = loadHeader(inputStream);
 	}
 
+	public WaveHeader clone() {
+		WaveHeader clone = new WaveHeader();
+		clone.valid = this.valid;
+		clone.chunkId = this.chunkId;
+		clone.chunkSize = this.chunkSize;
+		clone.format = this.format;
+		clone.subChunk1Id = this.subChunk1Id;
+		clone.subChunk1Size = this.subChunk1Size;
+		clone.audioFormat = this.audioFormat;
+		clone.channels = this.channels;
+		clone.sampleRate = this.sampleRate;
+		clone.byteRate = this.byteRate;
+		clone.blockAlign = this.blockAlign;
+		clone.bitsPerSample = this.bitsPerSample;
+		clone.subChunk2Id = this.subChunk2Id;
+		clone.subChunk2Size = this.subChunk2Size;
+		return clone;
+	}
+
 	private boolean loadHeader(InputStream inputStream) {
 
 		byte[] headerBuffer = new byte[HEADER_BYTE_LENGTH];
