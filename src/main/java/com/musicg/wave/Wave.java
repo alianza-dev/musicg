@@ -16,18 +16,18 @@
 
 package com.musicg.wave;
 
+import com.musicg.fingerprint.FingerprintManager;
+import com.musicg.fingerprint.FingerprintSimilarity;
+import com.musicg.fingerprint.FingerprintSimilarityComputer;
+import com.musicg.wave.extension.NormalizedSampleAmplitudes;
+import com.musicg.wave.extension.Spectrogram;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Arrays;
-
-import com.musicg.fingerprint.FingerprintManager;
-import com.musicg.fingerprint.FingerprintSimilarity;
-import com.musicg.fingerprint.FingerprintSimilarityComputer;
-import com.musicg.wave.extension.NormalizedSampleAmplitudes;
-import com.musicg.wave.extension.Spectrogram;
 
 /**
  * Read WAVE headers and data from wave input stream
@@ -90,16 +90,19 @@ public class Wave implements Serializable{
 		this.waveHeader = waveHeader;
 		this.data = data;
 	}
-	
+
 	private void initWaveWithInputStream(InputStream inputStream) {
 		// reads the first 44 bytes for header
 		waveHeader = new WaveHeader(inputStream);
 
 		if (waveHeader.isValid()) {
 			// load data
-			try {
-				data = new byte[inputStream.available()];
-				inputStream.read(data);
+			try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+				byte[] buffer = new byte[0xFFFF];
+				for (int len = inputStream.read(buffer); len != -1; len = inputStream.read(buffer)) {
+					os.write(buffer, 0, len);
+				}
+				data = os.toByteArray();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

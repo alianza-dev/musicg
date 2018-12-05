@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.alianza</groupId>
         <artifactId>alz-basepom-minimal</artifactId>
-        <version>1.0.4</version>
+        <version>[1.0.4,1.999]</version>
     </parent>
 
     <scm>
         <developerConnection>scm:git:ssh://git@github.com/alianza-dev/musicg</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <groupId>com.alianza.qa</groupId>
     <artifactId>musicg</artifactId>
     <version>1.1.7-SNAPSHOT</version>
 
     <properties>
-        <basepom.check.skip-findbugs>true</basepom.check.skip-findbugs>
+        <basepom.check.skip-spotbugs>true</basepom.check.skip-spotbugs>
         <basepom.check.skip-checkstyle>true</basepom.check.skip-checkstyle>
     </properties>
 </project>
