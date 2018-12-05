@@ -14,7 +14,7 @@
 
     <groupId>com.alianza.qa</groupId>
     <artifactId>musicg</artifactId>
-    <version>1.1.6</version>
+    <version>1.1.7-SNAPSHOT</version>
 
     <properties>
         <basepom.check.skip-findbugs>true</basepom.check.skip-findbugs>
