@@ -1,0 +1,11 @@
+steps:
+- label: ":repeat: Maven Release"
+  plugins:
+    ecr#v1.1.4:
+      login: true
+      account_ids: 880807510442
+      no-include-email: true
+      region: us-east-2
+    ssh://git@github.com/alianza-dev/smart-maven-buildkite-plugin.git#v2.0.0:
+      job: release
+  branches: master

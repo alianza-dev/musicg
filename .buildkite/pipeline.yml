@@ -1,0 +1,26 @@
+steps:
+- label: ":hammer: Build"
+  plugins:
+    ecr#v1.1.4:
+      login: true
+      account_ids: "880807510442"
+      no-include-email: true
+      region: us-east-2
+    ssh://git@github.com/alianza-dev/smart-maven-buildkite-plugin.git#v2.0.0:
+      job: build
+  branches: "!master"
+- label: ":fork: Fork Maven Pipeline"
+  plugins:
+    ecr#v1.1.4:
+      login: true
+      account_ids: "880807510442"
+      no-include-email: true
+      region: us-east-2
+    ssh://git@github.com/alianza-dev/smart-maven-buildkite-plugin.git#v2.0.0:
+      job: resolve
+    ssh://git@github.com/alianza-dev/source-checker-buildkite-plugin.git#v1.0.1:
+      profile: maven
+    ssh://git@github.com/alianza-dev/dynamic-pipelines-buildkite-plugin.git#v1.1.0:
+      metadata_key: SOURCE_CHECKER_MATCHED_VERSION
+      notset: release.yml
+  branches: master
