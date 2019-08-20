@@ -16,9 +16,14 @@
 
 package com.musicg.wave;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 
 public class WaveFileManager{
@@ -41,7 +46,7 @@ public class WaveFileManager{
 	 *            
 	 * @see	wave file saved
 	 */
-	public void saveWaveAsFile(String filename){
+	public InputStream getInputStream () {
 
 		WaveHeader waveHeader=wave.getWaveHeader();
 		
@@ -55,8 +60,8 @@ public class WaveFileManager{
 		long subChunk2Size = waveHeader.getSubChunk2Size();
 		int blockAlign = waveHeader.getBlockAlign();
 
+		ByteArrayOutputStream fos = new ByteArrayOutputStream();
 		try {
-			FileOutputStream fos = new FileOutputStream(filename);
 			fos.write(WaveHeader.RIFF_HEADER.getBytes());
 			// little endian
 			fos.write(new byte[] { (byte) (chunkSize), (byte) (chunkSize >> 8),
@@ -84,8 +89,22 @@ public class WaveFileManager{
 					(byte) (subChunk2Size >> 24) });
 			fos.write(wave.getBytes());
 			fos.close();
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		return new ByteArrayInputStream(fos.toByteArray());
+	}
+
+	public void saveWaveAsFile(String filename) {
+
+		InputStream initialStream = getInputStream();
+		byte[] buffer = new byte[0];
+		try {
+			buffer = new byte[initialStream.available()];
+			initialStream.read(buffer);
+			OutputStream outStream = null;
+			outStream = new FileOutputStream(new File(filename));
+			outStream.write(buffer);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
